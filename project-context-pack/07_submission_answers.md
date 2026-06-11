@@ -8,7 +8,7 @@ Concept Ladder
 
 ## One-Line Description
 
-An AI learning app that turns complex topics into clickable concept maps so learners can drill into unfamiliar terms without losing context.
+An AI learning app that turns complex topics into clickable concept maps so users can drill into unfamiliar terms without losing context.
 
 ## What Did You Build?
 
