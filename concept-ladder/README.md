@@ -9,7 +9,13 @@ npm install
 npm run dev
 ```
 
-Open `http://localhost:3000`.
+Public application URL:
+
+```text
+http://143.47.120.198
+```
+
+When running locally, the development server uses `http://localhost:3000`.
 
 ## Useful Commands
 

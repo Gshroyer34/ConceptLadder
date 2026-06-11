@@ -6,7 +6,7 @@ The app is built as a context-preserving concept graph rather than a chat transc
 
 ## Live Demo
 
-Current OCI VM demo:
+Application URL:
 
 ```text
 http://143.47.120.198
@@ -71,11 +71,13 @@ npm install
 npm run dev
 ```
 
-Open:
+Public application URL:
 
 ```text
-http://localhost:3000
+http://143.47.120.198
 ```
+
+When running locally with `npm run dev`, the development server uses `http://localhost:3000`.
 
 Production build:
 
