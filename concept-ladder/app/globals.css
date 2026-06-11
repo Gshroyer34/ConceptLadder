@@ -85,36 +85,6 @@ button:disabled {
   text-transform: uppercase;
 }
 
-.status-pill {
-  display: inline-flex;
-  align-items: center;
-  min-height: 36px;
-  max-width: 220px;
-  gap: 8px;
-  padding: 8px 12px;
-  border: 1px solid var(--border);
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.88);
-  color: var(--muted);
-  font-size: 13px;
-  font-weight: 750;
-  white-space: nowrap;
-}
-
-.status-light {
-  width: 9px;
-  height: 9px;
-  flex: 0 0 auto;
-  border-radius: 999px;
-  background: var(--teal);
-  box-shadow: 0 0 0 4px var(--teal-soft);
-}
-
-.status-light.fallback {
-  background: var(--gold);
-  box-shadow: 0 0 0 4px var(--gold-soft);
-}
-
 .topic-panel,
 .breadcrumbs,
 .tree-panel,
@@ -478,7 +448,6 @@ button:focus-visible {
 }
 
 .error-banner,
-.notice-banner,
 .safety-note,
 .depth-note {
   border-radius: 8px;
@@ -491,12 +460,6 @@ button:focus-visible {
   border: 1px solid rgba(207, 95, 73, 0.35);
   background: #fff0ec;
   color: #8f2f21;
-}
-
-.notice-banner {
-  border: 1px solid rgba(217, 146, 18, 0.35);
-  background: var(--gold-soft);
-  color: #75500d;
 }
 
 .safety-note,
@@ -558,10 +521,6 @@ button:focus-visible {
   .panel-heading {
     align-items: stretch;
     flex-direction: column;
-  }
-
-  .status-pill {
-    width: fit-content;
   }
 
   .level-control {

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { ConceptTree } from "@/components/ConceptTree";
 import { DrilldownPanel } from "@/components/DrilldownPanel";
@@ -35,7 +35,7 @@ export function AppShell() {
   const [level, setLevel] = useState<LearnerLevel>("beginner");
   const [session, setSession] = useState<LearningSession | null>(null);
   const [loading, setLoading] = useState(false);
-  const [meta, setMeta] = useState<ProviderMeta | null>(null);
+  const [, setMeta] = useState<ProviderMeta | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -72,14 +72,6 @@ export function AppShell() {
 
   const activeNode = session ? session.nodes[session.activeNodeId] : null;
   const rootNode = session ? session.nodes[session.rootNodeId] : null;
-  const providerLabel = useMemo(() => {
-    if (!meta) {
-      return "Fallback ready";
-    }
-
-    return meta.fallbackUsed ? "Fallback active" : `${capitalize(meta.provider)} active`;
-  }, [meta]);
-
   async function handleGenerate(nextTopic = topic, nextLevel = level) {
     const userGoal = nextTopic.trim() || "Kubernetes";
 
@@ -181,10 +173,6 @@ export function AppShell() {
           <p className="product-kicker">Concept Ladder</p>
           <h1>Interactive concept map</h1>
         </div>
-        <div className="status-pill" title={meta?.notice}>
-          <span className={meta?.fallbackUsed ? "status-light fallback" : "status-light"} />
-          {providerLabel}
-        </div>
       </header>
 
       <TopicInput
@@ -200,7 +188,6 @@ export function AppShell() {
       <Breadcrumbs session={session} onSelect={handleSelectNode} />
 
       {error ? <p className="error-banner">{error}</p> : null}
-      {meta?.notice && meta.fallbackUsed ? <p className="notice-banner">{meta.notice}</p> : null}
 
       <div className="workspace-grid">
         <ConceptTree session={session} onSelect={handleSelectNode} />
@@ -214,10 +201,6 @@ export function AppShell() {
       </div>
     </main>
   );
-}
-
-function capitalize(value: string) {
-  return value.charAt(0).toUpperCase() + value.slice(1);
 }
 
 async function requestExplanation(input: ExplainInput): Promise<ExplainApiResponse> {
