@@ -80,7 +80,7 @@ export function AppShell() {
     return meta.fallbackUsed ? "Fallback active" : `${capitalize(meta.provider)} active`;
   }, [meta]);
 
-  async function handleGenerate(nextTopic = topic) {
+  async function handleGenerate(nextTopic = topic, nextLevel = level) {
     const userGoal = nextTopic.trim() || "Kubernetes";
 
     setLoading(true);
@@ -90,7 +90,7 @@ export function AppShell() {
       const explainInput = {
         user_goal: userGoal,
         source_text: null,
-        learner_level: level
+        learner_level: nextLevel
       };
       const output = await requestExplanation(explainInput);
       setMeta(output.meta);
@@ -147,6 +147,14 @@ export function AppShell() {
     void handleGenerate(example);
   }
 
+  function handleLevelChange(nextLevel: LearnerLevel) {
+    setLevel(nextLevel);
+
+    if (session) {
+      void handleGenerate(topic, nextLevel);
+    }
+  }
+
   function handleSelectNode(nodeId: string) {
     if (!session) {
       return;
@@ -184,7 +192,7 @@ export function AppShell() {
         level={level}
         loading={loading}
         onTopicChange={setTopic}
-        onLevelChange={setLevel}
+        onLevelChange={handleLevelChange}
         onGenerate={() => void handleGenerate()}
         onExample={handleExample}
       />

@@ -14,6 +14,15 @@ type SeededConcept = {
   drilldowns: Record<string, DrilldownOutput>;
 };
 
+type LevelCopy = {
+  summaryAddendum: string;
+  keyTerms: DrillableTerm[];
+  prerequisites: string[];
+  analogy: string;
+  question: string;
+  expectedAnswer: string;
+};
+
 function term(term: string, reason: string, difficulty: DrillableTerm["difficulty"]): DrillableTerm {
   return { term, reason, difficulty };
 }
@@ -593,6 +602,143 @@ const seededConcepts: SeededConcept[] = [
   }
 ];
 
+const levelCopyByConcept: Record<string, Partial<Record<LearnerLevel, LevelCopy>>> = {
+  Kubernetes: {
+    intermediate: {
+      summaryAddendum:
+        "At an intermediate level, the useful mental model is a reconciliation system: teams submit declarative configuration, controllers compare that desired state against cluster reality, and the scheduler places pods where capacity and constraints fit. The tradeoffs are operational complexity, networking model choices, and learning how failures move through services, deployments, and nodes.",
+      keyTerms: [
+        term("declarative configuration", "How teams tell Kubernetes what state to maintain.", "medium"),
+        term("controllers", "The automation loops that reconcile desired state with reality.", "medium"),
+        term("scheduler", "The component that chooses where pods should run.", "medium"),
+        term("service discovery", "How workloads find each other after pods move or restart.", "medium")
+      ],
+      prerequisites: ["YAML", "load balancing", "container images"],
+      analogy:
+        "Think of Kubernetes like an autopilot: you set the destination and constraints, then controllers keep correcting the system as conditions change.",
+      question: "What does a Kubernetes controller keep trying to reconcile?",
+      expectedAnswer: "It reconciles the desired state declared by the user with the actual state running in the cluster."
+    },
+    expert: {
+      summaryAddendum:
+        "At an expert level, Kubernetes is an extensible distributed control plane. The API server exposes state, etcd stores it, controllers reconcile resources, and node agents implement work through CRI, CNI, and CSI integrations. The deeper questions are consistency, admission control, scheduling policy, blast radius, upgrade safety, and how custom resources extend the platform without destabilizing it.",
+      keyTerms: [
+        term("API server", "The central Kubernetes interface for reads, writes, and admission.", "hard"),
+        term("etcd", "The strongly consistent backing store for cluster state.", "hard"),
+        term("admission control", "Policy hooks that validate or mutate API requests.", "hard"),
+        term("CRI CNI CSI", "The runtime, networking, and storage integration boundaries.", "hard")
+      ],
+      prerequisites: ["distributed systems", "network policy", "control planes"],
+      analogy:
+        "Think of Kubernetes as a programmable operating system for clusters: the API is the syscall surface and controllers are long-running system daemons.",
+      question: "Why is Kubernetes often described as a control plane rather than just a scheduler?",
+      expectedAnswer:
+        "Because scheduling is only one controller-driven behavior inside a larger API-backed reconciliation system."
+    }
+  },
+  "Neural networks": {
+    intermediate: {
+      summaryAddendum:
+        "At an intermediate level, focus on the training loop: forward pass, loss calculation, backpropagation, and an optimizer updating parameters. The model's success depends not only on architecture, but also on data quality, feature representation, regularization, learning rate, and whether it generalizes beyond the training examples.",
+      keyTerms: [
+        term("forward pass", "The prediction step before measuring error.", "medium"),
+        term("optimizer", "The algorithm that updates weights using gradients.", "medium"),
+        term("generalization", "Whether the model works on examples it did not train on.", "medium"),
+        term("regularization", "Techniques that reduce overfitting.", "medium")
+      ],
+      prerequisites: ["vectors", "gradients", "datasets"],
+      analogy:
+        "Think of training like tuning a recipe through repeated taste tests: each batch gives feedback, but the recipe must work for future meals too.",
+      question: "What is the purpose of the optimizer in training?",
+      expectedAnswer: "It uses gradient information to adjust model weights so future predictions reduce the loss."
+    },
+    expert: {
+      summaryAddendum:
+        "At an expert level, the interesting layer is the interaction between architecture, objective, optimization dynamics, and data distribution. Capacity, inductive bias, normalization, initialization, regularization, and compute budget all shape what representations the network learns and how brittle those representations are under distribution shift.",
+      keyTerms: [
+        term("inductive bias", "The assumptions an architecture makes easier to learn.", "hard"),
+        term("optimization dynamics", "How training behavior evolves over many updates.", "hard"),
+        term("distribution shift", "When production data differs from training data.", "hard"),
+        term("representation learning", "How internal layers encode useful structure.", "hard")
+      ],
+      prerequisites: ["linear algebra", "optimization", "probability"],
+      analogy:
+        "Think of the network as a learned coordinate system: training shapes which directions in that space become useful for the task.",
+      question: "Why can a model with low training loss still fail in production?",
+      expectedAnswer:
+        "It may have overfit the training distribution or learned representations that do not transfer under distribution shift."
+    }
+  },
+  OAuth: {
+    intermediate: {
+      summaryAddendum:
+        "At an intermediate level, OAuth is easiest to understand through the authorization code flow. The client sends the user to an authorization server, receives a short-lived code at a registered redirect URI, exchanges that code for tokens, and uses scopes to limit API access. The core design goal is delegated authorization with limited exposure.",
+      keyTerms: [
+        term("authorization code flow", "The common browser-based OAuth flow for server-side apps.", "medium"),
+        term("token exchange", "The step where a temporary code becomes usable tokens.", "medium"),
+        term("refresh token", "A token used to obtain new access tokens.", "medium"),
+        term("resource server", "The API that accepts and validates the access token.", "medium")
+      ],
+      prerequisites: ["HTTP redirects", "API requests", "tokens"],
+      analogy:
+        "Think of OAuth like checking into a hotel: the front desk verifies you and gives a key card with only the access you need.",
+      question: "Why does the authorization code flow use a temporary code first?",
+      expectedAnswer:
+        "It lets the client complete a controlled server-side token exchange instead of exposing long-lived credentials in the browser redirect."
+    },
+    expert: {
+      summaryAddendum:
+        "At an expert level, OAuth is a protocol framework with security properties that depend on exact flow choices and implementation details. PKCE, redirect URI validation, token audience, issuer checks, scope design, refresh-token rotation, sender-constrained tokens, and replay resistance determine whether delegated access stays bounded in real systems.",
+      keyTerms: [
+        term("PKCE", "A protection for authorization code interception.", "hard"),
+        term("token audience", "The intended API or service for a token.", "hard"),
+        term("issuer validation", "Checking which authority minted a token.", "hard"),
+        term("refresh-token rotation", "Reducing damage if a refresh token leaks.", "hard")
+      ],
+      prerequisites: ["threat modeling", "browser security", "JWT validation"],
+      analogy:
+        "Think of OAuth as a delegated capability system: every token is a scoped capability whose issuer, audience, lifetime, and holder matter.",
+      question: "What makes OAuth security depend on implementation details?",
+      expectedAnswer:
+        "Small choices around redirects, token validation, PKCE, scope boundaries, and token storage determine whether the delegated access can be abused."
+    }
+  },
+  "Oracle Acceleron": {
+    intermediate: {
+      summaryAddendum:
+        "At an intermediate level, focus on the data path. Acceleron moves cloud-managed packet handling, virtual device presentation, storage translation, and security policy closer to the SmartNIC. That can reduce host CPU overhead and latency while still exposing familiar guest interfaces like accelerated VirtIO networking and NVMe-style storage.",
+      keyTerms: [
+        term("data path", "The route packets or storage operations take through the platform.", "medium"),
+        term("off-box virtualization", "Moving virtualization work away from the customer host CPU.", "medium"),
+        term("PCIe", "The high-speed local bus used for devices such as SmartNICs and NVMe.", "medium"),
+        term("policy enforcement", "Where cloud infrastructure applies traffic and access rules.", "medium")
+      ],
+      prerequisites: ["virtualization", "PCIe devices", "network throughput"],
+      analogy:
+        "Think of Acceleron as a specialized traffic desk at the edge of the server that handles routing, checks, and device translation before the workload spends CPU on it.",
+      question: "Why does moving data-path work to the SmartNIC matter?",
+      expectedAnswer:
+        "It can reduce host overhead and latency while preserving cloud-managed networking, storage, and security controls."
+    },
+    expert: {
+      summaryAddendum:
+        "At an expert level, Acceleron is about collapsing infrastructure control and high-performance I/O into a programmable device boundary. The interesting questions are how VirtIO and NVMe front ends map to OCI-managed backends, where tenant isolation is enforced, how policy is applied in the packet path, and what failure domains appear when SmartNIC firmware, host software, and cloud control planes interact.",
+      keyTerms: [
+        term("device boundary", "Where guest-visible devices meet provider-controlled infrastructure.", "hard"),
+        term("tenant isolation", "The separation guarantees between workloads and customers.", "hard"),
+        term("firmware control plane", "The SmartNIC-managed layer that must stay coordinated with OCI services.", "hard"),
+        term("I/O virtualization", "How network and storage devices are presented to instances.", "hard")
+      ],
+      prerequisites: ["I/O virtualization", "NIC offload", "cloud isolation"],
+      analogy:
+        "Think of Acceleron as a provider-controlled I/O coprocessor: it presents standard device surfaces while keeping enforcement and acceleration outside the guest.",
+      question: "What is the key architectural boundary Acceleron changes?",
+      expectedAnswer:
+        "It moves more cloud networking, storage, and enforcement work into a provider-controlled SmartNIC boundary while preserving standard guest-facing device interfaces."
+    }
+  }
+};
+
 export function getSeededExplanation(input: ExplainInput): ExplainOutput {
   const seeded = findSeededConcept(input.user_goal);
 
@@ -609,7 +755,7 @@ export function getSeededDrilldown(input: DrilldownInput): DrilldownOutput {
   const output = seeded?.drilldowns[lookupKey];
 
   if (output) {
-    return output;
+    return withRequestedDrilldownLevel(output, input);
   }
 
   return createGenericDrilldown(input);
@@ -627,47 +773,129 @@ function findSeededConcept(goal: string) {
 }
 
 function withRequestedLevel(output: ExplainOutput, learnerLevel: LearnerLevel): ExplainOutput {
-  if (output.level === learnerLevel) {
-    return output;
-  }
+  const variant = levelCopyByConcept[output.concept]?.[learnerLevel];
 
-  const levelNudge =
-    learnerLevel === "expert"
-      ? "This version assumes you are comfortable with technical vocabulary and focuses on mechanism."
-      : learnerLevel === "intermediate"
-        ? "This version keeps the framing practical while preserving the key technical relationships."
-        : "This version keeps the explanation plain and concrete.";
+  if (!variant) {
+    return {
+      ...output,
+      level: learnerLevel
+    };
+  }
 
   return {
     ...output,
     level: learnerLevel,
-    summary: `${output.summary} ${levelNudge}`
+    summary: `${variant.summaryAddendum} ${output.summary}`,
+    key_terms: compactTerms([...variant.keyTerms, ...output.key_terms], 8),
+    prerequisites: uniqueStrings([...output.prerequisites, ...variant.prerequisites]).slice(0, 7),
+    analogy: variant.analogy,
+    check_understanding: [
+      {
+        question: variant.question,
+        expected_answer: variant.expectedAnswer
+      }
+    ]
+  };
+}
+
+function withRequestedDrilldownLevel(output: DrilldownOutput, input: DrilldownInput): DrilldownOutput {
+  if (input.learner_level === "beginner") {
+    return output;
+  }
+
+  const lens =
+    input.learner_level === "expert"
+      ? {
+          explanation:
+            ` Expert lens: pay attention to the boundary conditions around ${output.term}, including ownership, failure modes, security assumptions, and where control passes between components.`,
+          why:
+            ` For ${input.parent_concept}, this term is also a design boundary: it affects performance, isolation, and operational risk, not just the happy-path explanation.`,
+          terms: ["boundary condition", "control point", "failure mode", "security assumption"],
+          example:
+            `In a real architecture review, you would ask who owns ${output.term.toLowerCase()}, what telemetry proves it is healthy, and how the system behaves when it degrades.`
+        }
+      : {
+          explanation:
+            ` At an intermediate level, connect ${output.term.toLowerCase()} to the mechanism: where it sits in ${input.parent_concept}, what it passes to the next piece, and what tradeoff it introduces.`,
+          why:
+            ` For ${input.parent_concept}, this helps move from definition to system behavior: inputs, outputs, constraints, and tradeoffs.`,
+          terms: ["mechanism", "tradeoff", "constraint", "failure mode"],
+          example:
+            `A practical way to test your understanding is to trace one request or operation through ${output.term.toLowerCase()} and name what changes before and after it.`
+        };
+
+  return {
+    ...output,
+    contextual_explanation: `${output.contextual_explanation}${lens.explanation}`,
+    why_it_matters_here: `${output.why_it_matters_here}${lens.why}`,
+    new_terms: uniqueStrings([...lens.terms, ...output.new_terms]).slice(0, 6),
+    simple_example: lens.example
   };
 }
 
 function createGenericExplanation(userGoal: string, learnerLevel: LearnerLevel): ExplainOutput {
   const concept = userGoal.trim() || "the concept";
   const lowerConcept = concept.toLowerCase();
+  const levelCopy =
+    learnerLevel === "expert"
+      ? {
+          summary:
+            `At an expert level, evaluate ${concept} by its architecture, boundary conditions, failure modes, and tradeoffs. Start with the purpose, then map the components, assumptions, performance constraints, and risks that shape whether the idea works in a real system.`,
+          terms: [
+            term("architecture", `The structural design behind ${concept}.`, "hard"),
+            term("boundary conditions", `Where ${concept} stops working cleanly.`, "hard"),
+            term("failure modes", `How ${concept} can break or degrade.`, "hard"),
+            term("tradeoffs", `The costs and compromises that shape ${concept}.`, "medium")
+          ],
+          analogy:
+            "Think of it like reviewing a production design: the interesting part is not just what it does, but what assumptions make it hold.",
+          expected:
+            "A strong answer should name the architecture, assumptions, tradeoffs, and likely failure modes."
+        }
+      : learnerLevel === "intermediate"
+        ? {
+            summary:
+              `At an intermediate level, understand ${concept} by tracing the mechanism. Identify the main parts, what each part receives, what it produces, and what tradeoff appears when those parts interact. This turns ${lowerConcept} from a definition into a working mental model.`,
+            terms: [
+              term("mechanism", `How ${concept} actually works step by step.`, "medium"),
+              term("main parts", `The pieces that make ${concept} easier to reason about.`, "easy"),
+              term("tradeoffs", `The costs and compromises that shape ${concept}.`, "medium"),
+              term("real example", `A concrete way to connect ${concept} to practice.`, "easy")
+            ],
+            analogy:
+              "Think of it like following a package through a delivery system: each handoff explains how the whole thing works.",
+            expected:
+              "A good answer should trace the main parts and explain what each part changes."
+          }
+        : {
+            summary:
+              `${concept} is best understood by separating the core idea from the details around it. Start with what problem ${lowerConcept} is meant to solve, then identify the main parts involved, the tradeoffs those parts create, and one real example where the idea shows up. This keeps the learning path grounded: instead of memorizing definitions, you can connect each new term back to why it matters for understanding ${lowerConcept}.`,
+            terms: [
+              term("core idea", `The central purpose behind ${concept}.`, "easy"),
+              term("main parts", `The pieces that make ${concept} easier to reason about.`, "easy"),
+              term("tradeoffs", `The costs and compromises that shape ${concept}.`, "medium"),
+              term("real example", `A concrete way to connect ${concept} to practice.`, "easy")
+            ],
+            analogy:
+              "Think of it like learning a new neighborhood: first find the main streets, then explore the side streets only when they help you get oriented.",
+            expected:
+              "A good answer should name the practical problem before naming the tools or details."
+          };
   const keyTerms = compactTerms([
-    term("core idea", `The central purpose behind ${concept}.`, "easy"),
-    term("main parts", `The pieces that make ${concept} easier to reason about.`, "easy"),
-    term("tradeoffs", `The costs and compromises that shape ${concept}.`, "medium"),
-    term("real example", `A concrete way to connect ${concept} to practice.`, "easy")
+    ...levelCopy.terms
   ]);
 
   return {
     concept,
     level: learnerLevel,
-    summary:
-      `${concept} is best understood by separating the core idea from the details around it. Start with what problem ${lowerConcept} is meant to solve, then identify the main parts involved, the tradeoffs those parts create, and one real example where the idea shows up. This keeps the learning path grounded: instead of memorizing definitions, you can connect each new term back to why it matters for understanding ${lowerConcept}.`,
+    summary: levelCopy.summary,
     key_terms: keyTerms,
     prerequisites: ["problem", "system", "example"],
-    analogy:
-      "Think of it like learning a new neighborhood: first find the main streets, then explore the side streets only when they help you get oriented.",
+    analogy: levelCopy.analogy,
     check_understanding: [
       {
         question: `What problem does ${concept} help solve?`,
-        expected_answer: "A good answer should name the practical problem before naming the tools or details."
+        expected_answer: levelCopy.expected
       }
     ],
     safety_note: null
@@ -677,12 +905,18 @@ function createGenericExplanation(userGoal: string, learnerLevel: LearnerLevel):
 function createGenericDrilldown(input: DrilldownInput): DrilldownOutput {
   const termText = input.selected_text.trim();
   const parent = input.parent_concept.trim();
+  const levelDetail =
+    input.learner_level === "expert"
+      ? ` For an expert learner, examine assumptions, ownership boundaries, failure modes, and whether this term changes performance, safety, or correctness in ${parent}.`
+      : input.learner_level === "intermediate"
+        ? ` For an intermediate learner, trace where it sits in the mechanism: what it receives, what it changes, and what tradeoff it creates for ${parent}.`
+        : "";
 
   return {
     term: termText,
     parent_concept: parent,
     contextual_explanation:
-      `${termText} matters here because it is one of the ideas that supports ${parent}. In this context, you do not need a full encyclopedia definition yet. Focus on how ${termText.toLowerCase()} changes what ${parent.toLowerCase()} can do, what problem it helps solve, and what new decision it introduces. Once that relationship is clear, the parent concept becomes easier to hold in your head.`,
+      `${termText} matters here because it is one of the ideas that supports ${parent}. In this context, you do not need a full encyclopedia definition yet. Focus on how ${termText.toLowerCase()} changes what ${parent.toLowerCase()} can do, what problem it helps solve, and what new decision it introduces. Once that relationship is clear, the parent concept becomes easier to hold in your head.${levelDetail}`,
     why_it_matters_here:
       `Understanding ${termText.toLowerCase()} helps explain a specific part of ${parent}, instead of becoming a separate research detour.`,
     new_terms: ["purpose", "mechanism", "example"],
@@ -691,4 +925,23 @@ function createGenericDrilldown(input: DrilldownInput): DrilldownOutput {
       `If ${parent} is the larger topic, ${termText.toLowerCase()} is one piece you would point to when explaining how the larger idea works in practice.`,
     safety_note: null
   };
+}
+
+function uniqueStrings(values: string[]) {
+  const seen = new Set<string>();
+  const unique: string[] = [];
+
+  for (const value of values) {
+    const trimmed = value.trim();
+    const normalized = normalizeTerm(trimmed);
+
+    if (!normalized || seen.has(normalized)) {
+      continue;
+    }
+
+    seen.add(normalized);
+    unique.push(trimmed);
+  }
+
+  return unique;
 }
