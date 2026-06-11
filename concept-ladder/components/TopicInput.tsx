@@ -11,7 +11,7 @@ type TopicInputProps = {
 };
 
 const levels: LearnerLevel[] = ["beginner", "intermediate", "expert"];
-const examples = ["Kubernetes", "Neural networks", "OAuth"];
+const examples = ["Kubernetes", "Neural networks", "OAuth", "Oracle Acceleron"];
 
 export function TopicInput({
   topic,

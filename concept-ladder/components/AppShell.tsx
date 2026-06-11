@@ -14,17 +14,21 @@ import {
   getNodeExplanation,
   markNodeUnderstood
 } from "@/lib/conceptGraph";
-import { getSeededExplanation } from "@/lib/demoData";
+import { getSeededDrilldown, getSeededExplanation } from "@/lib/demoData";
 import { loadSession, saveSession } from "@/lib/storage";
 import { extractSourceSentence } from "@/lib/text";
 import type {
   DrillableTerm,
+  DrilldownInput,
   DrilldownApiResponse,
+  ExplainInput,
   ExplainApiResponse,
   LearnerLevel,
   LearningSession,
   ProviderMeta
 } from "@/types/learning";
+
+const usesStaticFallback = process.env.NEXT_PUBLIC_STATIC_EXPORT === "true";
 
 export function AppShell() {
   const [topic, setTopic] = useState("Kubernetes");
@@ -83,25 +87,14 @@ export function AppShell() {
     setError(null);
 
     try {
-      const response = await fetch("/api/explain", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          user_goal: userGoal,
-          source_text: null,
-          learner_level: level
-        })
-      });
-
-      if (!response.ok) {
-        throw new Error("The explanation route did not respond successfully.");
-      }
-
-      const output = (await response.json()) as ExplainApiResponse;
+      const explainInput = {
+        user_goal: userGoal,
+        source_text: null,
+        learner_level: level
+      };
+      const output = await requestExplanation(explainInput);
       setMeta(output.meta);
-      setSession(createSessionFromExplanation({ user_goal: userGoal, source_text: null, learner_level: level }, output));
+      setSession(createSessionFromExplanation(explainInput, output));
       setTopic(output.concept);
     } catch (caughtError) {
       setError(caughtError instanceof Error ? caughtError.message : "Could not generate an explanation.");
@@ -139,19 +132,7 @@ export function AppShell() {
         learner_level: session.learnerLevel
       };
 
-      const response = await fetch("/api/drilldown", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify(drilldownInput)
-      });
-
-      if (!response.ok) {
-        throw new Error("The drill-down route did not respond successfully.");
-      }
-
-      const output = (await response.json()) as DrilldownApiResponse;
+      const output = await requestDrilldown(drilldownInput);
       setMeta(output.meta);
       setSession(addDrilldownNode(session, parent.id, drilldownInput, output));
     } catch (caughtError) {
@@ -229,4 +210,58 @@ export function AppShell() {
 
 function capitalize(value: string) {
   return value.charAt(0).toUpperCase() + value.slice(1);
+}
+
+async function requestExplanation(input: ExplainInput): Promise<ExplainApiResponse> {
+  if (usesStaticFallback) {
+    return {
+      ...getSeededExplanation(input),
+      meta: staticFallbackMeta()
+    };
+  }
+
+  const response = await fetch("/api/explain", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(input)
+  });
+
+  if (!response.ok) {
+    throw new Error("The explanation route did not respond successfully.");
+  }
+
+  return (await response.json()) as ExplainApiResponse;
+}
+
+async function requestDrilldown(input: DrilldownInput): Promise<DrilldownApiResponse> {
+  if (usesStaticFallback) {
+    return {
+      ...getSeededDrilldown(input),
+      meta: staticFallbackMeta()
+    };
+  }
+
+  const response = await fetch("/api/drilldown", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(input)
+  });
+
+  if (!response.ok) {
+    throw new Error("The drill-down route did not respond successfully.");
+  }
+
+  return (await response.json()) as DrilldownApiResponse;
+}
+
+function staticFallbackMeta(): ProviderMeta {
+  return {
+    requestedProvider: "static-fallback",
+    provider: "fallback",
+    fallbackUsed: false
+  };
 }

@@ -395,6 +395,201 @@ const seededConcepts: SeededConcept[] = [
         safety_note: null
       }
     }
+  },
+  {
+    aliases: [
+      "oracle acceleron",
+      "acceleron",
+      "oracle acceleron smartnic",
+      "acceleron smartnic",
+      "oracle acceleron shape",
+      "acceleron shape",
+      "acceleron shapes"
+    ],
+    explanation: {
+      concept: "Oracle Acceleron",
+      level: "beginner",
+      summary:
+        "Oracle Acceleron is OCI's SmartNIC-based architecture for moving more cloud networking, virtualization, and security work onto specialized hardware. Instead of treating the host NIC as a simple network card, Acceleron combines host networking with cloud control functions in one device. That helps preserve OCI's isolation model while reducing extra packet-handling steps that can add latency or consume host CPU. For users, the practical idea is that compatible shapes can get faster and more efficient networking and storage paths while still using familiar interfaces such as accelerated VirtIO and NVMe storage.",
+      key_terms: [
+        term("SmartNIC", "Acceleron is built around a programmable network device, not just a basic NIC.", "medium"),
+        term("host NIC", "The older mental model Acceleron expands beyond.", "easy"),
+        term("cloud control functions", "The cloud-managed networking and security work Acceleron moves closer to hardware.", "medium"),
+        term("isolation model", "A core OCI design goal that Acceleron preserves.", "medium"),
+        term("accelerated VirtIO", "The compatibility layer that keeps standard drivers while improving performance.", "hard"),
+        term("NVMe storage", "A storage interface Acceleron can expose to instances over PCIe.", "medium"),
+        term("compatible shapes", "The OCI compute shapes where Acceleron support is available.", "easy")
+      ],
+      prerequisites: ["virtual machine", "network card", "cloud networking"],
+      analogy:
+        "Think of Oracle Acceleron like moving traffic control, security checks, and loading dock coordination into a specialized building entrance instead of asking every tenant's office to handle that work.",
+      check_understanding: [
+        {
+          question: "What kind of work does Oracle Acceleron move onto specialized hardware?",
+          expected_answer:
+            "It moves cloud networking, virtualization, storage-path, and security enforcement work closer to the SmartNIC hardware."
+        }
+      ],
+      safety_note: null
+    },
+    drilldowns: {
+      [key("Oracle Acceleron", "SmartNIC")]: {
+        term: "SmartNIC",
+        parent_concept: "Oracle Acceleron",
+        contextual_explanation:
+          "A SmartNIC is a programmable network adapter that can do more than pass packets between a server and the network. In Oracle Acceleron, the SmartNIC also helps run cloud networking, virtualization, security enforcement, and storage-path functions that would otherwise sit elsewhere or consume more host resources. That is why Acceleron is not just a faster network card; it is part of OCI's cloud infrastructure design.",
+        why_it_matters_here:
+          "SmartNIC is the hardware anchor for understanding how Acceleron changes the path between an instance and OCI networking or storage services.",
+        new_terms: ["accelerated VirtIO", "cloud control functions", "host NIC", "PCIe"],
+        depth_warning: false,
+        simple_example:
+          "A VM can use familiar virtual network and storage devices while the SmartNIC handles more of the cloud-managed work behind those devices.",
+        safety_note: null
+      },
+      [key("SmartNIC", "accelerated VirtIO")]: {
+        term: "accelerated VirtIO",
+        parent_concept: "SmartNIC",
+        contextual_explanation:
+          "Accelerated VirtIO means Oracle Acceleron implements the common VirtIO interface using programmable hardware. The guest operating system can keep using standard VirtIO-style drivers, but the data path can be faster because more of the work happens on the SmartNIC. This balances two goals: broad software compatibility and better network performance.",
+        why_it_matters_here:
+          "Accelerated VirtIO explains how Acceleron can improve throughput and latency without requiring every workload to use custom hardware-specific drivers.",
+        new_terms: ["VirtIO standard", "driver compatibility", "data path"],
+        depth_warning: false,
+        simple_example:
+          "A Linux instance can see a familiar virtual network device while Acceleron handles packet movement through a faster hardware-backed path.",
+        safety_note: null
+      },
+      [key("accelerated VirtIO", "VirtIO standard")]: {
+        term: "VirtIO standard",
+        parent_concept: "accelerated VirtIO",
+        contextual_explanation:
+          "The VirtIO standard is a common way for virtual machines to talk to virtual devices such as network adapters or disks. In the Acceleron context, VirtIO matters because it gives operating systems a familiar interface while OCI improves the implementation underneath. The learner does not need to memorize the spec; the key point is compatibility with a faster backend.",
+        why_it_matters_here:
+          "VirtIO is the bridge between ordinary VM drivers and Acceleron's hardware-backed acceleration.",
+        new_terms: ["virtual device", "guest operating system", "backend"],
+        depth_warning: true,
+        simple_example:
+          "The VM thinks it is using a normal virtual network adapter, while the platform uses Acceleron to make the traffic path more efficient.",
+        safety_note: null
+      },
+      [key("Oracle Acceleron", "host NIC")]: {
+        term: "host NIC",
+        parent_concept: "Oracle Acceleron",
+        contextual_explanation:
+          "A host NIC is the network interface card attached to a server. In a traditional model, it mostly moves packets between the host and the physical network. Oracle Acceleron expands that role by combining the host NIC with cloud-managed networking and control functions. That means more infrastructure work can happen on the device rather than on the host CPU or separate boards.",
+        why_it_matters_here:
+          "Comparing Acceleron to a host NIC makes clear why Oracle describes it as an architecture shift, not just a new shape name.",
+        new_terms: ["packet handling", "host CPU", "control plane"],
+        depth_warning: false,
+        simple_example:
+          "Instead of a VM's network traffic bouncing through extra infrastructure components, Acceleron can streamline more of that path on one device.",
+        safety_note: null
+      },
+      [key("Oracle Acceleron", "cloud control functions")]: {
+        term: "cloud control functions",
+        parent_concept: "Oracle Acceleron",
+        contextual_explanation:
+          "Cloud control functions are the platform-managed jobs that make cloud networking safe and usable: enforcing policy, managing virtualization, observing traffic behavior, and connecting instances to OCI services. Acceleron places more of these functions on the SmartNIC so the cloud provider can keep control and isolation while reducing extra hops and host overhead.",
+        why_it_matters_here:
+          "These functions are what make Acceleron part of OCI infrastructure rather than merely a network adapter upgrade.",
+        new_terms: ["policy enforcement", "observability", "virtualization"],
+        depth_warning: false,
+        simple_example:
+          "A packet can be checked against infrastructure policy earlier in the path instead of relying only on software running inside the host.",
+        safety_note: null
+      },
+      [key("Oracle Acceleron", "isolation model")]: {
+        term: "isolation model",
+        parent_concept: "Oracle Acceleron",
+        contextual_explanation:
+          "An isolation model is the set of design choices that keeps tenants and workloads separated in a multitenant cloud. Oracle's FAQ emphasizes that Acceleron is meant to improve performance while preserving OCI's strong isolation approach. In plain terms, Acceleron should speed up the path without giving customer workloads unsafe control over shared cloud infrastructure.",
+        why_it_matters_here:
+          "Performance improvements only matter in cloud infrastructure if tenant separation and provider-controlled security remain intact.",
+        new_terms: ["multitenant cloud", "tenant separation", "defense in depth"],
+        depth_warning: false,
+        simple_example:
+          "Two customers can run workloads on shared cloud infrastructure while cloud-managed controls help keep their traffic and storage access separate.",
+        safety_note: null
+      },
+      [key("Oracle Acceleron", "accelerated VirtIO")]: {
+        term: "accelerated VirtIO",
+        parent_concept: "Oracle Acceleron",
+        contextual_explanation:
+          "Accelerated VirtIO is Acceleron's way of giving instances a familiar virtual-device interface while improving the underlying hardware path. VirtIO is already common for virtual machines, so this design helps workloads use standard drivers while the SmartNIC handles more packet and device work efficiently.",
+        why_it_matters_here:
+          "It is the compatibility story: users get acceleration without needing to rethink every guest operating system image.",
+        new_terms: ["VirtIO standard", "driver compatibility", "hardware-backed path"],
+        depth_warning: false,
+        simple_example:
+          "A workload can boot with normal VirtIO networking, but the packet handling can be accelerated by the SmartNIC implementation.",
+        safety_note: null
+      },
+      [key("Oracle Acceleron", "NVMe storage")]: {
+        term: "NVMe storage",
+        parent_concept: "Oracle Acceleron",
+        contextual_explanation:
+          "NVMe storage is a high-performance storage interface that operating systems understand as a fast local-style device. In the Acceleron architecture, the SmartNIC can expose NVMe-like storage devices to an instance over PCIe while translating the operations to OCI Block Storage with cloud policy and encryption controls still handled by the platform.",
+        why_it_matters_here:
+          "NVMe helps explain why Acceleron is about both networking and storage-path acceleration.",
+        new_terms: ["PCIe", "OCI Block Storage", "namespace", "IOPS"],
+        depth_warning: false,
+        simple_example:
+          "An instance can see a standard NVMe device while Acceleron manages the cloud storage connection behind it.",
+        safety_note: null
+      },
+      [key("NVMe storage", "PCIe")]: {
+        term: "PCIe",
+        parent_concept: "NVMe storage",
+        contextual_explanation:
+          "PCIe is the high-speed connection standard used inside servers to connect devices such as network cards and storage controllers. For Acceleron, PCIe matters because the SmartNIC can present fast device interfaces, such as NVMe storage, directly to the compute instance while keeping cloud controls on the infrastructure side.",
+        why_it_matters_here:
+          "PCIe is the local hardware lane that helps make Acceleron's virtualized storage and networking feel closer to direct device access.",
+        new_terms: ["device interface", "direct hardware access", "storage controller"],
+        depth_warning: true,
+        simple_example:
+          "The instance can interact with a storage device over a PCIe-style path while OCI still manages the actual cloud storage service.",
+        safety_note: null
+      },
+      [key("Oracle Acceleron", "compatible shapes")]: {
+        term: "compatible shapes",
+        parent_concept: "Oracle Acceleron",
+        contextual_explanation:
+          "Compatible shapes are the OCI compute shapes that can use Oracle Acceleron SmartNIC. The Oracle FAQ lists support for E6 Standard, E6 Dense, X12 Standard, and A4 Standard shapes, with availability to confirm in OCI documentation and the console. The important point is that Acceleron is chosen through supported instance shapes rather than installed like an application inside a VM.",
+        why_it_matters_here:
+          "This connects the architecture to the user's practical question: which OCI instances can actually use Acceleron.",
+        new_terms: ["E6 Standard", "E6 Dense", "X12 Standard", "A4 Standard"],
+        depth_warning: false,
+        simple_example:
+          "To adopt Acceleron, a team would launch or relaunch a workload on a supported shape instead of enabling it inside an existing incompatible instance.",
+        safety_note: null
+      },
+      [key("Oracle Acceleron", "Zero Trust Packet Routing")]: {
+        term: "Zero Trust Packet Routing",
+        parent_concept: "Oracle Acceleron",
+        contextual_explanation:
+          "Zero Trust Packet Routing is an OCI security concept focused on least-privilege packet handling. In the Acceleron context, it matters because the SmartNIC can apply infrastructure-controlled policy earlier in the data path. That helps combine hardware acceleration with security enforcement instead of treating performance and policy as separate concerns.",
+        why_it_matters_here:
+          "It shows how Acceleron supports OCI's security story, not just its throughput story.",
+        new_terms: ["least privilege", "policy enforcement", "data path"],
+        depth_warning: false,
+        simple_example:
+          "Traffic can be checked against permitted paths near the host edge before it moves deeper through cloud infrastructure.",
+        safety_note: null
+      },
+      [key("cloud control functions", "policy enforcement")]: {
+        term: "policy enforcement",
+        parent_concept: "cloud control functions",
+        contextual_explanation:
+          "Policy enforcement means applying rules about what traffic or storage operations are allowed. In Acceleron, enforcing policy on infrastructure-controlled hardware helps OCI keep security decisions outside the customer's guest OS while still allowing high-performance data movement.",
+        why_it_matters_here:
+          "It explains how Acceleron can improve performance without handing security control to the workload.",
+        new_terms: ["least privilege", "guest OS", "infrastructure control"],
+        depth_warning: true,
+        simple_example:
+          "A workload may send packets quickly, but platform policy can still decide which destinations are allowed.",
+        safety_note: null
+      }
+    }
   }
 ];
 

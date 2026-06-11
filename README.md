@@ -9,7 +9,7 @@ The app is built as a context-preserving concept graph rather than a chat transc
 Application URL:
 
 ```text
-http://143.47.120.198
+https://gshroyer34.github.io/ConceptLadder/
 ```
 
 ## MVP Features
@@ -31,12 +31,14 @@ The fallback provider includes polished seeded content for:
 - Kubernetes
 - Neural networks
 - OAuth
+- Oracle Acceleron
 
 Recommended demo paths:
 
 ```text
 Kubernetes -> containers -> container image -> runtime
 Kubernetes -> cluster -> node -> pod
+Oracle Acceleron -> SmartNIC -> accelerated VirtIO -> VirtIO standard
 ```
 
 ## Repository Layout
@@ -109,7 +111,9 @@ If a configured provider fails, the API layer falls back to seeded data so the d
 
 ## Deployment Notes
 
-The current VM deployment runs:
+The GitHub Pages deployment is defined in `.github/workflows/pages.yml`.
+
+The previous OCI VM deployment used:
 
 - App directory: `/opt/concept-ladder`
 - Runtime: `/opt/concept-ladder-node`

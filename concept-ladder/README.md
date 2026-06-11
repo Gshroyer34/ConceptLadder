@@ -12,10 +12,18 @@ npm run dev
 Public application URL:
 
 ```text
-http://143.47.120.198
+https://gshroyer34.github.io/ConceptLadder/
 ```
 
 When running locally, the development server uses `http://localhost:3000`.
+
+## GitHub Pages
+
+GitHub Pages is static hosting, so this build uses the seeded fallback provider directly in the browser.
+
+```bash
+GITHUB_PAGES=true NEXT_PUBLIC_STATIC_EXPORT=true npm run build:pages
+```
 
 ## Useful Commands
 
@@ -46,6 +54,7 @@ Seeded content includes:
 
 - `Kubernetes -> containers -> container image -> runtime`
 - `Kubernetes -> cluster -> node -> pod`
+- `Oracle Acceleron -> SmartNIC -> accelerated VirtIO -> VirtIO standard`
 - Neural networks root drilldowns
 - OAuth root drilldowns
 
