@@ -16,7 +16,7 @@ We built an AI learning app for understanding complex concepts. A user enters a 
 
 ## Who Has This Problem?
 
-People learning jargon-heavy, high-complexity subjects where every explanation assumes background knowledge. Our initial target is technical learners and career switchers learning software, cloud, AI, cybersecurity, data, or engineering concepts.
+People learning jargon-heavy, high-complexity subjects where every explanation assumes background knowledge. Our initial target is technical learners and career switchers learning software, cloud, AI, cybersecurity, data, or engineering concepts, but has the potential to expand to any user who is looking to learn.
 
 ## Specific User
 
